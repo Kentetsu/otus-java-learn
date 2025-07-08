@@ -17,7 +17,8 @@ public class HelloOtus {
         for (int i = min; i < max; i++) {
             example.add(i);
         }
+        String reverseString = new ArrayList<>(Lists.reverse(example)).toString();
 
-        logger.info(Lists.reverse(example).toString());
+        logger.info("Log this: {}", reverseString);
     }
 }
