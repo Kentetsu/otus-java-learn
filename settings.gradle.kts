@@ -1,5 +1,5 @@
 rootProject.name = "eonJava"
-include("Eon")
+include("hw01-gradle")
 
 
 pluginManagement {

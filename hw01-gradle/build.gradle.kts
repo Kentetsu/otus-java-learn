@@ -15,7 +15,7 @@ tasks {
         archiveVersion.set("0.1")
         archiveClassifier.set("")
         manifest {
-            attributes(mapOf("Main-Class" to "ru.eon.App"))
+            attributes(mapOf("Main-Class" to "ru.eon.HelloOtus"))
         }
     }
 
