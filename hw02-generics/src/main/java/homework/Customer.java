@@ -59,7 +59,7 @@ public class Customer implements Comparable<Customer>, Cloneable {
 
     @Override
     public int compareTo(Customer customer) {
-        return (int) (this.scores - customer.scores);
+        return Integer.compare((int) this.scores, (int) customer.scores);
     }
 
     @Override
