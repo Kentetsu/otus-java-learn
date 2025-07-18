@@ -1,5 +1,5 @@
 rootProject.name = "eonJava"
-include("hw01-gradle")
+include("hw02-generics")
 
 
 pluginManagement {
@@ -23,3 +23,5 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
+include("hw01-gradle:hw02-generics")
+include("hw02-generics")
