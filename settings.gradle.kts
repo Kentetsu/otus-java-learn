@@ -1,6 +1,4 @@
 rootProject.name = "eonJava"
-include("hw02-generics")
-
 
 pluginManagement {
     val jgitver: String by settings
@@ -25,3 +23,4 @@ pluginManagement {
 }
 include("hw01-gradle:hw02-generics")
 include("hw02-generics")
+include("hw03-annotations")
