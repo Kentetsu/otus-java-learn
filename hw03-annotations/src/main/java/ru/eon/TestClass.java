@@ -1,10 +1,17 @@
 package ru.eon;
 
 public class TestClass {
+    int x;
 
     @Before
     void sayHi() {
         System.out.println("hi before");
+    }
+
+    @Before
+    int initObjectX(int x) {
+        this.x = x;
+        return this.x;
     }
 
     @Test
