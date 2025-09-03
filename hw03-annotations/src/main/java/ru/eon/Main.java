@@ -44,13 +44,8 @@ public class Main {
 
     private static int runTest(Object object, Method method) {
         try {
-            int result;
-            if (method.getParameterCount() == 0 && method.getReturnType().equals(void.class)) {
-                method.invoke(object);
-            } else {
-                result = (int) method.invoke(object, 1);
-                System.out.println(result);
-            }
+            if (method.getParameterCount() > 0) throw new Exception("Параметры метода не поддерживаются.");
+            method.invoke(object);
             return 0;
 
         } catch (Exception e) {

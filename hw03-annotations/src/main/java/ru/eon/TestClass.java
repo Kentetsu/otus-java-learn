@@ -9,19 +9,19 @@ public class TestClass {
     }
 
     @Before
-    int initObjectX(int x) {
-        this.x = x;
+    int initObjectX() {
+        this.x = 1;
         return this.x;
     }
 
     @Test
-    int getNext(int number) {
-        return number + 1;
+    int getNext() {
+        return this.x + 1;
     }
 
     @Test
-    int getPrevious(int number) {
-        return number - 1;
+    int getPrevious() {
+        return this.x - 1;
     }
 
     @After
