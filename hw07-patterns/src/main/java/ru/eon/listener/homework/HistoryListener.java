@@ -23,26 +23,19 @@ public class HistoryListener implements Listener, HistoryReader {
     private Message copyMessage(Message original) {
         ObjectForMessage copyOfField13 = new ObjectForMessage();
         List<String> copyOfListField13 = new ArrayList<>();
-        for (String stringOfList : original.getField13().getData()) {
-            copyOfListField13.add(new String(stringOfList));
+        var copyOfData = original.getField13().getData();
+        if (copyOfData != null) {
+            for (String stringOfList : original.getField13().getData()) {
+                if (stringOfList != null) {
+                    copyOfListField13.add(new String(stringOfList));
+                } else {
+                    copyOfListField13.add(new String());
+                }
+            }
         }
         copyOfField13.setData(copyOfListField13);
 
-        Message copyMassage = new Message.Builder(original.getId())
-                .field1(original.getField1())
-                .field2(original.getField2())
-                .field3(original.getField3())
-                .field4(original.getField4())
-                .field5(original.getField5())
-                .field6(original.getField6())
-                .field7(original.getField7())
-                .field8(original.getField8())
-                .field9(original.getField9())
-                .field10(original.getField10())
-                .field11(original.getField11())
-                .field12(original.getField12())
-                .field13(copyOfField13)
-                .build();
+        Message copyMassage = original.toBuilder().field13(copyOfField13).build();
 
         return copyMassage;
     }

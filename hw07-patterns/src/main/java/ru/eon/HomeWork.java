@@ -9,6 +9,8 @@ import ru.eon.model.Message;
 import ru.eon.model.ObjectForMessage;
 import ru.eon.processor.homework.ProcessorExceptionOnEvenSecond;
 import ru.eon.processor.homework.ProcessorSwapField11Field12;
+import ru.eon.processor.homework.SystemTimeProvider;
+import ru.eon.processor.homework.TimeProvider;
 
 public class HomeWork {
     private final List<String> listForField13 = new ArrayList<>(List.of("F13"));
@@ -50,7 +52,10 @@ public class HomeWork {
         field13Data.add(data);
         objectForField13.setData(field13Data);
 
-        var processors = List.of(new ProcessorSwapField11Field12(), new ProcessorExceptionOnEvenSecond());
+        TimeProvider DateTimeProvider = new SystemTimeProvider();
+
+        var processors =
+                List.of(new ProcessorSwapField11Field12(), new ProcessorExceptionOnEvenSecond(DateTimeProvider));
 
         var complexProcessor = new ComplexProcessor(processors, ex -> {});
 
