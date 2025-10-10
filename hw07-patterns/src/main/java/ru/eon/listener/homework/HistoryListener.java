@@ -29,7 +29,7 @@ public class HistoryListener implements Listener, HistoryReader {
                 if (stringOfList != null) {
                     copyOfListField13.add(new String(stringOfList));
                 } else {
-                    copyOfListField13.add(new String());
+                    copyOfListField13.add(null);
                 }
             }
         }
