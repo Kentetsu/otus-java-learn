@@ -2,7 +2,7 @@ package ru.eon;
 
 public class Proxy {
     public static void main(String[] args) {
-        TestLoggingInterface clazz = Ioc.createMyClass();
+        TestLoggingInterface clazz = Ioc.createMyClass(TestLogging.class);
         clazz.calculation(1);
         clazz.calculation(2, 1);
         clazz.calculation(1, 2, 3);

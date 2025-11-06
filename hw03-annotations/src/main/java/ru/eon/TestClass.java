@@ -1,20 +1,27 @@
 package ru.eon;
 
 public class TestClass {
+    int x;
 
     @Before
     void sayHi() {
         System.out.println("hi before");
     }
 
-    @Test
-    int getNext(int number) {
-        return number + 1;
+    @Before
+    int initObjectX() {
+        this.x = 1;
+        return this.x;
     }
 
     @Test
-    int getPrevious(int number) {
-        return number - 1;
+    int getNext() {
+        return this.x + 1;
+    }
+
+    @Test
+    int getPrevious() {
+        return this.x - 1;
     }
 
     @After
