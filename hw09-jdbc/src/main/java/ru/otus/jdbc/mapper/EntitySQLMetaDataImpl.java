@@ -9,6 +9,10 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
     private final List<String> listOfNames;
     private final String tableName;
     private final List<String> listOfNamesWithoutId;
+    private final String querySelectAll;
+    private final String querySelectById;
+    private final String queryInsert;
+    private final String queryUpdate;
 
     public EntitySQLMetaDataImpl(EntityClassMetaData<?> entityClassMetaDataClient) {
         this.entityClassMetaData = entityClassMetaDataClient;
@@ -19,34 +23,32 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
         this.listOfNamesWithoutId = entityClassMetaDataClient.getFieldsWithoutId().stream()
                 .map(Field::getName)
                 .toList();
-        ;
+        this.querySelectAll = createSelectAllQuery();
+        this.querySelectById = createSelectByIdQuery();
+        this.queryInsert = createInsertQuery();
+        this.queryUpdate = createUpdateQuery();
     }
 
-    @Override
-    public String getSelectAllSql() {
+    private String createSelectAllQuery() {
         String result = String.format("SELECT %s FROM %s;", String.join(", ", listOfNames), tableName);
         return result;
     }
 
-    @Override
-    public String getSelectByIdSql() {
+    private String createSelectByIdQuery() {
         String idColumnName = entityClassMetaData.getIdField().getName();
-
         String result = String.format(
                 "SELECT %s FROM %s WHERE %s = ?;", String.join(", ", listOfNames), tableName, idColumnName);
         return result;
     }
 
-    @Override
-    public String getInsertSql() {
+    private String createInsertQuery() {
         String columns = String.join(", ", listOfNamesWithoutId);
         String placeholders =
                 String.join(", ", listOfNamesWithoutId.stream().map(s -> "?").toList());
         return String.format("INSERT INTO %s (%s) VALUES (%s);", tableName, columns, placeholders);
     }
 
-    @Override
-    public String getUpdateSql() {
+    private String createUpdateQuery() {
         String idColumnName = entityClassMetaData.getIdField().getName();
         StringBuilder accumulator = new StringBuilder(String.format("UPDATE %s SET ", tableName));
 
@@ -60,5 +62,25 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
 
         accumulator.append(String.format(" WHERE %s = ?;", idColumnName));
         return accumulator.toString();
+    }
+
+    @Override
+    public String getSelectAllSql() {
+        return querySelectAll;
+    }
+
+    @Override
+    public String getSelectByIdSql() {
+        return querySelectById;
+    }
+
+    @Override
+    public String getInsertSql() {
+        return queryInsert;
+    }
+
+    @Override
+    public String getUpdateSql() {
+        return queryUpdate;
     }
 }
