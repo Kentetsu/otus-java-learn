@@ -31,5 +31,4 @@ include("hw06-solid:ATM")
 include("hw07-patterns")
 include("hw08-serialization")
 include("hw09-jdbc")
-
-
+include("hw10-jpql")
