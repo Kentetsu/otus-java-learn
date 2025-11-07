@@ -68,11 +68,6 @@ public class Client implements Cloneable {
 
         Client clonedClient = new Client(this.id, this.name, cloneAddress, clonePhones);
 
-        // Устанавливаем связь после создания
-        if (clonePhones != null) {
-            clonePhones.forEach(phone -> phone.setClient(clonedClient));
-        }
-
         return clonedClient;
     }
 }
