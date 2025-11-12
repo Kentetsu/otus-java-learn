@@ -5,7 +5,7 @@ import java.util.Map;
 public class ATM {
 
     private final CashRegister cashRegister;
-    int[] initArray = {5000, 1000, 500, 100, 50, 10};
+    private int[] initArray = {5000, 1000, 500, 100, 50, 10};
 
     public ATM() {
         this.cashRegister = new CashRegister(initArray);
