@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Пользователи</title>
+    <style>
+        table, th, td {
+          border: 1px solid black;
+        }
+        table {
+          border-collapse: collapse;
+        }
+        th, td {
+          padding: 15px;
+          text-align: left;
+        }
+    </style>
+    <script>
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function createClient() {
+            const nameInput = document.getElementById('clientNameInput');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                alert('Введите имя клиента');
+                return;
+            }
+
+            const clientData = {
+                name: name
+            };
+
+            fetch('/api/clients', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(clientData)
+            })
+            .then(response => {
+                if (response.status === 201) {
+                    return response.json();
+                } else {
+                    return response.json().then(error => {
+                        throw new Error(error.error || 'Ошибка создания клиента');
+                    });
+                }
+            })
+            .then(createdClient => {
+                nameInput.value = '';
+                document.getElementById('messageContainer').innerHTML =
+                    '<span style="color: green;">Клиент "' + escapeHtml(createdClient.name) + '" успешно создан!</span>';
+                // Перезагружаем страницу для обновления списка
+                setTimeout(() => location.reload(), 1000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('messageContainer').innerHTML =
+                    '<span style="color: red;">Ошибка: ' + escapeHtml(error.message) + '</span>';
+            });
+        }
+
+        // Обработка нажатия Enter в поле ввода
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameInput = document.getElementById('clientNameInput');
+            nameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    createClient();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<h2>Управление клиентами</h2>
+
+<h4>Создание клиента</h4>
+<div>
+    <input type="text" id="clientNameInput" placeholder="Введите имя клиента">
+    <button onclick="createClient()">Создать</button>
+</div>
+<div id="messageContainer" class="message"></div>
+
+<h4>Список клиентов</h4>
+<table>
+    <thead>
+    <tr>
+        <th style="width: 50px">ID</th>
+        <th style="width: 200px">Имя</th>
+    </tr>
+    </thead>
+    <tbody id="clientsTableBody">
+    <#if ListOfClient?? && ListOfClient?size gt 0>
+    <#list ListOfClient as client>
+    <tr>
+        <td align="center">${client.id!''}</td>
+        <td align="center">${client.name!''}</td>
+    </tr>
+    </#list>
+    <#else>
+    <tr>
+        <td colspan="3" style="text-align: center;">Нет клиентов</td>
+    </tr>
+</#if>
+</tbody>
+</table>
+</body>
+</html>
