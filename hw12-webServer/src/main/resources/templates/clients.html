@@ -28,7 +28,12 @@
 
         function createClient() {
             const nameInput = document.getElementById('clientNameInput');
+            const addressInput = document.getElementById('clientAddressInput');
+            const phoneInput = document.getElementById('clientPhoneInput');
+
             const name = nameInput.value.trim();
+            const address = addressInput.value.trim();
+            const phone = phoneInput.value.trim();
 
             if (!name) {
                 alert('Введите имя клиента');
@@ -36,7 +41,9 @@
             }
 
             const clientData = {
-                name: name
+                name: name,
+                address: address,
+                phone: phone
             };
 
             fetch('/api/clients', {
@@ -57,6 +64,8 @@
             })
             .then(createdClient => {
                 nameInput.value = '';
+                addressInput.value = '';
+                phoneInput.value = '';
                 document.getElementById('messageContainer').innerHTML =
                     '<span style="color: green;">Клиент "' + escapeHtml(createdClient.name) + '" успешно создан!</span>';
                 // Перезагружаем страницу для обновления списка
@@ -69,7 +78,6 @@
             });
         }
 
-        // Обработка нажатия Enter в поле ввода
         document.addEventListener('DOMContentLoaded', function() {
             const nameInput = document.getElementById('clientNameInput');
             nameInput.addEventListener('keypress', function(e) {
@@ -86,6 +94,8 @@
 <h4>Создание клиента</h4>
 <div>
     <input type="text" id="clientNameInput" placeholder="Введите имя клиента">
+    <input type="text" id="clientAddressInput" placeholder="Введите адрес">
+    <input type="text" id="clientPhoneInput" placeholder="Введите телефон клиента">
     <button onclick="createClient()">Создать</button>
 </div>
 <div id="messageContainer" class="message"></div>
@@ -96,6 +106,8 @@
     <tr>
         <th style="width: 50px">ID</th>
         <th style="width: 200px">Имя</th>
+        <th style="width: 250px">Адрес</th>
+        <th style="width: 150px">Телефон</th>
     </tr>
     </thead>
     <tbody id="clientsTableBody">
@@ -104,11 +116,22 @@
     <tr>
         <td align="center">${client.id!''}</td>
         <td align="center">${client.name!''}</td>
+        <td align="center">${(client.address.street)!'Не указан'}</td>
+        <td align="center">
+            <#if client.phones?? && client.phones?size gt 0>
+            ${client.phones[0].number!''}
+            <#if client.phones?size gt 1>
+            (+${client.phones?size - 1})
+        </#if>
+        <#else>
+        Не указан
+    </#if>
+    </td>
     </tr>
     </#list>
     <#else>
     <tr>
-        <td colspan="3" style="text-align: center;">Нет клиентов</td>
+        <td colspan="4" style="text-align: center;">Нет клиентов</td>
     </tr>
 </#if>
 </tbody>

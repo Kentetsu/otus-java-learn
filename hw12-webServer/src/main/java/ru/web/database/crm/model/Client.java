@@ -1,5 +1,6 @@
 package ru.web.database.crm.model;
 
+import com.google.gson.annotations.Expose;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
@@ -35,6 +36,7 @@ public class Client implements Cloneable {
 
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @Expose
     private List<Phone> phones;
 
     public Client(String name) {
