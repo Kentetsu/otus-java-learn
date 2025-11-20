@@ -5,11 +5,10 @@ import org.slf4j.LoggerFactory;
 
 public class Threads {
     private static final Logger logger = LoggerFactory.getLogger(Threads.class);
-    private boolean directionFlag = true;
+    private boolean directionFlag = false;
     private boolean orderFlag = true;
-    private int value = 0;
+    private int value = 2;
     private final int step = 1;
-    private boolean cancelFirstRedirection = true;
 
     private synchronized void action(boolean isFirst, boolean isIncrementing) {
         while (!Thread.currentThread().isInterrupted()) {
@@ -23,9 +22,7 @@ public class Threads {
                 }
 
                 logger.info(String.valueOf(value));
-                if (cancelFirstRedirection && !isIncrementing) {
-                    cancelFirstRedirection = false;
-                } else {
+                {
                     if ((value <= 1 || value >= 10) && !isIncrementing) {
                         directionFlag = !directionFlag;
                     }
