@@ -30,6 +30,7 @@ public class ClientsServlet extends HttpServlet {
         Map<String, Object> paramsMap = new HashMap<>();
         List<Client> clients = userDao.findAll();
         paramsMap.put(TEMPLATE_ATTR_LIST_OF_CLIENT, clients);
+        paramsMap.put("phoneCount", 1);
 
         response.setContentType("text/html");
         response.getWriter().println(templateProcessor.getPage(USERS_PAGE_TEMPLATE, paramsMap));

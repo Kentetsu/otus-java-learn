@@ -38,7 +38,19 @@ public class CreateClientsServlet extends HttpServlet {
             var jsonObject = gson.fromJson(requestBody, java.util.Map.class);
             String name = (String) jsonObject.get("name");
             String address = (String) jsonObject.get("address");
-            String phone = (String) jsonObject.get("phone");
+
+            List<Phone> phones = new ArrayList<>();
+            if (jsonObject.get("phones") instanceof List) {
+                List<?> phoneList = (List<?>) jsonObject.get("phones");
+                for (Object phoneObj : phoneList) {
+                    if (phoneObj != null) {
+                        String phoneNumber = phoneObj.toString().trim();
+                        if (!phoneNumber.isEmpty()) {
+                            phones.add(new Phone(null, phoneNumber));
+                        }
+                    }
+                }
+            }
 
             Client newClient = new Client(null, name.trim());
 
@@ -47,12 +59,7 @@ public class CreateClientsServlet extends HttpServlet {
                 newClient.setAddress(clientAddress);
             }
 
-            if (phone != null && !phone.trim().isEmpty()) {
-                List<Phone> phones = new ArrayList<>();
-                Phone clientPhone = new Phone(null, phone.trim());
-                phones.add(clientPhone);
-                newClient.setPhones(phones);
-            }
+            newClient.setPhones(phones);
 
             Client savedClient = userDao.saveClient(newClient);
 

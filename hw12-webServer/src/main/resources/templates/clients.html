@@ -13,8 +13,16 @@
           padding: 15px;
           text-align: left;
         }
+        .form-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
     </style>
     <script>
+        let phoneCount = 1;
         function escapeHtml(unsafe) {
             if (!unsafe) return '';
             return unsafe
@@ -26,14 +34,50 @@
                 .replace(/'/g, "&#039;");
         }
 
+        function addPhoneInput() {
+            phoneCount++;
+            const phonesContainer = document.getElementById('phonesContainer');
+            const phoneRow = document.createElement('div');
+            phoneRow.className = 'phone-input-row';
+            phoneRow.innerHTML = `
+                <input type="text" class="phone-input" placeholder="Введите телефон клиента">
+                <button type="button" class="remove-phone-btn" onclick="removePhoneInput(this)">Удалить</button>
+            `;
+            phonesContainer.appendChild(phoneRow);
+        }
+
+        function removePhoneInput(button) {
+            if (phoneCount > 1) {
+                button.parentElement.remove();
+                phoneCount--;
+            }
+        }
+
+        function getAllPhoneNumbers() {
+            const phones = [];
+            const phoneInputs = document.querySelectorAll('#phonesContainer .phone-input');
+            phoneInputs.forEach(input => {
+                if (input.value.trim()) {
+                    phones.push(input.value.trim());
+                }
+            });
+            return phones;
+        }
+
+        function clearPhoneInputs() {
+            const phoneInputs = document.querySelectorAll('#phonesContainer .phone-input');
+            phoneInputs.forEach(input => {
+                input.value = '';
+            });
+        }
+
         function createClient() {
             const nameInput = document.getElementById('clientNameInput');
             const addressInput = document.getElementById('clientAddressInput');
-            const phoneInput = document.getElementById('clientPhoneInput');
 
             const name = nameInput.value.trim();
             const address = addressInput.value.trim();
-            const phone = phoneInput.value.trim();
+            const phones = getAllPhoneNumbers();
 
             if (!name) {
                 alert('Введите имя клиента');
@@ -43,7 +87,7 @@
             const clientData = {
                 name: name,
                 address: address,
-                phone: phone
+                phones: phones
             };
 
             fetch('/api/clients', {
@@ -65,10 +109,10 @@
             .then(createdClient => {
                 nameInput.value = '';
                 addressInput.value = '';
-                phoneInput.value = '';
+                clearPhoneInputs();
+
                 document.getElementById('messageContainer').innerHTML =
                     '<span style="color: green;">Клиент "' + escapeHtml(createdClient.name) + '" успешно создан!</span>';
-                // Перезагружаем страницу для обновления списка
                 setTimeout(() => location.reload(), 1000);
             })
             .catch(error => {
@@ -91,14 +135,40 @@
 <body>
 <h2>Управление клиентами</h2>
 
-<h4>Создание клиента</h4>
-<div>
-    <input type="text" id="clientNameInput" placeholder="Введите имя клиента">
-    <input type="text" id="clientAddressInput" placeholder="Введите адрес">
-    <input type="text" id="clientPhoneInput" placeholder="Введите телефон клиента">
-    <button onclick="createClient()">Создать</button>
+<div class="form-container">
+    <h4>Создание клиента</h4>
+
+    <div class="form-row">
+        <div class="form-label">Имя клиента:</div>
+        <input type="text" id="clientNameInput" class="form-input" placeholder="Введите имя клиента">
+    </div>
+
+    <div class="form-row">
+        <div class="form-label">Адрес:</div>
+        <input type="text" id="clientAddressInput" class="form-input" placeholder="Введите адрес">
+    </div>
+
+    <div class="form-row">
+        <div class="form-label">Телефоны:</div>
+        <div style="flex: 1;">
+
+            <div id="phonesContainer">
+                <div class="phone-input-row">
+                    <input type="text" class="phone-input" placeholder="Введите телефон клиента">
+                </div>
+            </div>
+            <button type="button" class="add-phone-btn" onclick="addPhoneInput()">+ Добавить телефон</button>
+
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-label"></div>
+        <button class="submit-btn" onclick="createClient()">Создать клиента</button>
+    </div>
+
+    <div id="messageContainer" class="message"></div>
 </div>
-<div id="messageContainer" class="message"></div>
 
 <h4>Список клиентов</h4>
 <table>
@@ -107,10 +177,10 @@
         <th style="width: 50px">ID</th>
         <th style="width: 200px">Имя</th>
         <th style="width: 250px">Адрес</th>
-        <th style="width: 150px">Телефон</th>
+        <th style="width: 200px">Телефоны</th>
     </tr>
     </thead>
-    <tbody id="clientsTableBody">
+    <tbody>
     <#if ListOfClient?? && ListOfClient?size gt 0>
     <#list ListOfClient as client>
     <tr>
@@ -119,20 +189,19 @@
         <td align="center">${(client.address.street)!'Не указан'}</td>
         <td align="center">
             <#if client.phones?? && client.phones?size gt 0>
-            ${client.phones[0].number!''}
-            <#if client.phones?size gt 1>
-            (+${client.phones?size - 1})
-        </#if>
-        <#else>
-        Не указан
+            <#list client.phones as phone>
+            ${phone.number!''}<#if phone_has_next>, </#if>
+    </#list>
+    <#else>
+    Не указан
     </#if>
     </td>
     </tr>
-    </#list>
-    <#else>
-    <tr>
-        <td colspan="4" style="text-align: center;">Нет клиентов</td>
-    </tr>
+</#list>
+<#else>
+<tr>
+    <td colspan="4" style="text-align: center;">Нет клиентов</td>
+</tr>
 </#if>
 </tbody>
 </table>
