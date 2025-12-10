@@ -21,6 +21,7 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
+
 include("hw01-gradle:hw02-generics")
 include("hw02-generics")
 include("hw03-annotations")
@@ -28,6 +29,8 @@ include("hw04-gc")
 include("hw05-bytecodes")
 include("hw06-solid:ATM")
 include("hw07-patterns")
+include("hw08-serialization")
+include("hw09-jdbc")
 include("hw10-jpql")
 include("hw11-cache")
 include("hw12-webServer")

@@ -3,7 +3,7 @@ package ATM;
 import java.util.*;
 
 public class CashRegister {
-    private final ArrayList<Cell> cellBlock = new ArrayList<>();
+    private final List<Cell> cellBlock = new ArrayList<>();
 
     protected CashRegister(int[] arrayOfDenominations) {
         for (int denomination : arrayOfDenominations) {

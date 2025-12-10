@@ -4,7 +4,7 @@ import java.util.*;
 
 public class MyCache<K, V> implements HwCache<K, V> {
     // Надо реализовать эти методы
-    private final WeakHashMap<K, V> cacheHashMap = new WeakHashMap<>();
+    private final Map<K, V> cacheHashMap = new WeakHashMap<>();
     private final Set<HwListener<K, V>> listeners = new HashSet<>();
 
     @Override
@@ -45,9 +45,14 @@ public class MyCache<K, V> implements HwCache<K, V> {
     }
 
     private void notifyListeners(K key, V value, String action) {
+        try {
         List<HwListener<K, V>> listenersCopy = new ArrayList<>(listeners);
         for (HwListener<K, V> listener : listenersCopy) {
             listener.notify(key, value, action);
+        } }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         }
     }
-}
+
