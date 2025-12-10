@@ -77,20 +77,12 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     }
 
     private Object findComponentByType(List<Object> components, Class<?> targetType) {
-        List<Object> exactMatches = components.stream()
-                .filter(comp -> targetType.equals(comp.getClass()))
-                .toList();
-
-        if (exactMatches.size() == 1) {
-            return exactMatches.getFirst();
-        }
-
         List<Object> assignableMatches = components.stream()
                 .filter(comp -> targetType.isAssignableFrom(comp.getClass()))
                 .toList();
 
         if (assignableMatches.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("Нет кандидатов на внедрение");
         }
         if (assignableMatches.size() > 1) {
             throw new IllegalArgumentException("Найдено более одного компонента для типа: " + targetType);
@@ -111,12 +103,6 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         if (component == null) {
             throw new IllegalArgumentException("Не найдено компонента для типа: " + componentClass);
         }
-
-        if (!componentClass.isInstance(component)) {
-            throw new ClassCastException(
-                    "Компонент " + component.getClass() + " не может быть приведен к " + componentClass);
-        }
-
         return componentClass.cast(component);
     }
 
