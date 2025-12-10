@@ -1,0 +1,20 @@
+create sequence client_seq start with 1 increment by 1;
+
+create table address (
+    id bigserial not null primary key,
+    street varchar(255)
+);
+
+create table client (
+    id bigint DEFAULT nextval('client_seq') primary key,
+    name varchar(50),
+    address_id bigint,
+    foreign key (address_id) references address(id)
+);
+
+create table phones (
+    id bigserial not null primary key,
+    number varchar(20),
+    client_id bigint,
+    foreign key (client_id) references client(id)
+);
